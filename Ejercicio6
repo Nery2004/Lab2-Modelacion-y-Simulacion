@@ -1,0 +1,94 @@
+def funcion(x):
+    # f(x) = 2x^5 + 3x^4 - 3x^3 - 10x^2 - 4x + 4
+    return 2 * x**5 + 3 * x**4 - 3 * x**3 - 10 * x**2 - 4 * x + 4
+
+def derivada(x):
+    # f'(x) = 10x^4 + 12x^3 - 9x^2 - 20x - 4
+    return 10 * x**4 + 12 * x**3 - 9 * x**2 - 20 * x - 4
+
+def biseccion(a, b, tolerancia=1e-7, max_iter=100):
+    iteracion = 0
+    if funcion(a) * funcion(b) >= 0:
+        print(f"Error en bisección: f(a) y f(b) deben tener signos opuestos en el intervalo [{a}, {b}].")
+        return None, iteracion
+
+    while (b - a) / 2 > tolerancia and iteracion < max_iter:
+        c = (a + b) / 2
+        fc = funcion(c)
+        if fc == 0:
+            return c, iteracion + 1
+        elif funcion(a) * fc < 0:
+            b = c
+        else:
+            a = c
+        iteracion += 1
+
+    return (a + b) / 2, iteracion
+
+def secante(x0, x1, tolerancia=1e-7, max_iter=100):
+    iteracion = 0
+    while iteracion < max_iter:
+        f_x0 = funcion(x0)
+        f_x1 = funcion(x1)
+        if f_x1 - f_x0 == 0:
+            print(f"Error en secante: división por cero con x0={x0}, x1={x1}.")
+            return None, iteracion
+
+        x2 = x1 - f_x1 * (x1 - x0) / (f_x1 - f_x0)
+        if abs(x2 - x1) < tolerancia:
+            return x2, iteracion + 1
+
+        x0, x1 = x1, x2
+        iteracion += 1
+
+    return x2, iteracion
+
+def newton_raphson(x0, tolerancia=1e-7, max_iter=100):
+    iteracion = 0
+    while iteracion < max_iter:
+        f_x0 = funcion(x0)
+        df_x0 = derivada(x0)
+        if df_x0 == 0:
+            print(f"Error en Newton-Raphson: derivada cero en x={x0}.")
+            return None, iteracion
+
+        x1 = x0 - f_x0 / df_x0
+        if abs(x1 - x0) < tolerancia:
+            return x1, iteracion + 1
+
+        x0 = x1
+        iteracion += 1
+
+    return x1, iteracion
+
+# ===========================
+# Encontrar múltiples raíces
+# ===========================
+
+intervalos = [(-3, -2), (-1, 0), (1, 2)]
+nombres = ["Raíz 1", "Raíz 2", "Raíz 3"]
+
+print("=== Método de Bisección ===")
+for (a, b), nombre in zip(intervalos, nombres):
+    raiz, iteraciones = biseccion(a, b)
+    if raiz is not None:
+        print(f"{nombre}: {raiz:.10f} en {iteraciones} iteraciones")
+    else:
+        print(f"{nombre}: No se pudo encontrar raíz con bisección en el intervalo [{a}, {b}].")
+
+print("\n=== Método de la Secante ===")
+for (a, b), nombre in zip(intervalos, nombres):
+    raiz, iteraciones = secante(a, b)
+    if raiz is not None:
+        print(f"{nombre}: {raiz:.10f} en {iteraciones} iteraciones")
+    else:
+        print(f"{nombre}: No se pudo encontrar raíz con secante iniciando en x0={a}, x1={b}.")
+
+print("\n=== Método de Newton-Raphson ===")
+for (a, b), nombre in zip(intervalos, nombres):
+    x0 = (a + b) / 2
+    raiz, iteraciones = newton_raphson(x0)
+    if raiz is not None:
+        print(f"{nombre}: {raiz:.10f} en {iteraciones} iteraciones")
+    else:
+        print(f"{nombre}: No se pudo encontrar raíz con Newton-Raphson iniciando en x0={x0}.")
