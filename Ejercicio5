@@ -1,0 +1,79 @@
+def funcion(x):
+    return x**2 + 1 / (x - 7)
+
+def derivada(x):
+    return 2 * x - 1 / (x - 7)**2
+
+def biseccion(a, b, tolerancia=1e-7, max_iter=100):
+    iteracion = 0
+    if funcion(a) * funcion(b) >= 0:
+        print("Error en bisección: f(a) y f(b) deben tener signos opuestos.")
+        return None, iteracion
+
+    while (b - a) / 2 > tolerancia and iteracion < max_iter:
+        c = (a + b) / 2
+        fc = funcion(c)
+        if fc == 0:
+            return c, iteracion + 1
+        elif funcion(a) * fc < 0:
+            b = c
+        else:
+            a = c
+        iteracion += 1
+
+    return (a + b) / 2, iteracion
+
+def secante(x0, x1, tolerancia=1e-7, max_iter=100):
+    iteracion = 0
+    while iteracion < max_iter:
+        f_x0 = funcion(x0)
+        f_x1 = funcion(x1)
+        if f_x1 - f_x0 == 0:
+            print("Error en secante: división por cero.")
+            return None, iteracion
+
+        x2 = x1 - f_x1 * (x1 - x0) / (f_x1 - f_x0)
+        if abs(x2 - x1) < tolerancia:
+            return x2, iteracion + 1
+
+        x0, x1 = x1, x2
+        iteracion += 1
+
+    return x2, iteracion
+
+def newton_raphson(x0, tolerancia=1e-7, max_iter=100):
+    iteracion = 0
+    while iteracion < max_iter:
+        f_x0 = funcion(x0)
+        df_x0 = derivada(x0)
+        if df_x0 == 0:
+            print("Error en Newton-Raphson: derivada cero.")
+            return None, iteracion
+
+        x1 = x0 - f_x0 / df_x0
+        if abs(x1 - x0) < tolerancia:
+            return x1, iteracion + 1
+
+        x0 = x1
+        iteracion += 1
+
+    return x1, iteracion
+
+# ===========================
+# Comparación de resultados
+# ===========================
+
+# Bisección
+raiz_b, iter_b = biseccion(-3, 0)
+if raiz_b is not None:
+    print(f"Raíz (Bisección):      {raiz_b:.10f}, Iteraciones: {iter_b}")
+
+# Secante
+raiz_s, iter_s = secante(-3, 0)
+if raiz_s is not None:
+    print(f"Raíz (Secante):        {raiz_s:.10f}, Iteraciones: {iter_s}")
+
+# Newton-Raphson
+raiz_n, iter_n = newton_raphson(-2)
+if raiz_n is not None:
+    print(f"Raíz (Newton-Raphson): {raiz_n:.10f}, Iteraciones: {iter_n}")
