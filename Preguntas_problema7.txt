@@ -1,0 +1,12 @@
+Considere la funci´on f(x) = x3 − 2x + 2. Vamos a utilizar el m´etodo de Newton-Raphson con el punto inicial x0 = 0 para
+hallar un cero de este polinomio.
+
+a) Comenzando con x0. ¿Converge el método a la solución requerida? ¿Por qué? Explique qué ocurre con las iteraciones
+
+    - No, el método de Newton no converge a la solución requerida comenzando en x0 = .
+    - Esto debido a que el método entre en un ciclo infinito de dos valores, en la primera iteración
+     se obtiene x1 = 1 y en la siguiente x2 = 0. A partir de ahí, las iteraciones oscilan entre 0 y 1 indefinidamente.
+    
+    - Esto ocurre, porque para la función, su derivada no esos pnutos no dirige correctamente el proceso hacia una raíz.
+    - La derivada en x = 0 es f'(0) = -2 y en x = 1 es f'(1) = 1, pero los valores de la función y su
+    pendiente hacen que el método regrese al punto anterior
